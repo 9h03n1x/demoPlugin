@@ -1,0 +1,47 @@
+{
+	"Name": "Demo Plugin",
+	"Version": "0.1.1",
+	"Author": "nicco.hagedorn",
+	"Actions": [
+		{
+			"Name": "Counter2",
+			"UUID": "com.niccohagedorn.demoplugin.increment",
+			"Icon": "imgs/actions/counter/icon",
+			"Tooltip": "Displays a count, which increments by one on press.",
+			"PropertyInspectorPath": "propertyInspector/pi_counter.html",
+			"Controllers": [
+				"Keypad", "Encoder"
+			],
+			"States": [
+				{
+					"Image": "imgs/actions/demo/start_96",
+					"TitleAlignment": "middle"
+				}
+			]
+		}
+	],
+	"Category": "My Plugin",
+	"CategoryIcon": "imgs/plugin/marketplace",
+	"CodePath": "bin/plugin.js",
+	"Description": "demo",
+	"Icon": "imgs/plugin/marketplace",
+	"SDKVersion": 2,
+	"Software": {
+		"MinimumVersion": "6.4"
+	},
+	"OS": [
+		{
+			"Platform": "mac",
+			"MinimumVersion": "12.0"
+		},
+		{
+			"Platform": "windows",
+			"MinimumVersion": "10"
+		}
+	],
+	"Nodejs": {
+		"Version": "20",
+		"Debug": "enabled"
+	},
+	"UUID": "com.niccohagedorn.demoplugin"
+}
