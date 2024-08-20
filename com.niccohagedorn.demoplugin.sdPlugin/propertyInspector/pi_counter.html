@@ -1,11 +1,34 @@
 <head>
 	<meta charset="utf-8" />
 	<title>Increment Counter</title>
-	<link rel="stylesheet" href="streamdeck-js_sdk/css/sdpi.css">
+	<link rel="stylesheet" href="./streamdeck-javascript-sdk/css/sdpi.css">
 </head>
 
 <body>
-    <p>
-        This is a wjngfsdnjgasd
-    </p>
+	<div class="sdpi-wrapper">
+		<!-- Your plugin's HTML content goes here -->
+		<div class="sdpi-item">
+			<details class="message info">
+				<summary>
+					This lets you set the increment of the counter</summary>
+			</details>
+		</div>
+		<div class="sdpi-item">
+		<div class="sdpi-item-label">Increment</div>
+		<input class="sdpi-item-value" id="increment" onchange="sendValueToPlugin(event.target.value, 'increment')">
+		</input>
+	</div>
+
+
+	<!-- StreamDeck Libraries-->
+	<script src="streamdeck-javascript-sdk/js/constants.js"></script>
+	<script src="streamdeck-javascript-sdk/js/prototypes.js"></script>
+	<script src="streamdeck-javascript-sdk/js/utils.js"></script>
+	<script src="streamdeck-javascript-sdk/js/events.js"></script>
+	<script src="streamdeck-javascript-sdk/js/api.js"></script>
+	<script src="streamdeck-javascript-sdk/js/property-inspector.js"></script>
+	<script src="streamdeck-javascript-sdk/js/action.js"></script>
+
+	<!--Plugin Libraries-->
+	<script src="js/common.js"></script>
 </body>

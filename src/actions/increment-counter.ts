@@ -1,5 +1,6 @@
-import { action, DialDownEvent, DialRotateEvent, KeyDownEvent, SingletonAction, TouchTapEvent, WillAppearEvent } from "@elgato/streamdeck";
-
+import { action, DialDownEvent, DialRotateEvent, DidReceiveSettingsEvent, JsonValue, KeyDownEvent, SendToPluginEvent, SingletonAction, TouchTapEvent, WillAppearEvent } from "@elgato/streamdeck";
+import streamDeck, { LogLevel } from "@elgato/streamdeck";
+const logger = streamDeck.logger.createScope("increment");
 /**
  * An example action class that displays a count that increments by one each time the button is pressed.
  */
@@ -35,17 +36,20 @@ export class IncrementCounter extends SingletonAction<CounterSettings> {
 	 */
 	async onKeyDown(ev: KeyDownEvent<CounterSettings>): Promise<void> {
 		// Determine the current count from the settings.
-		let count = ev.payload.settings.count ?? 0;
-		count++;
+		let count= ev.payload.settings.count ?? 0;
+		let increment= ev.payload.settings.increment?? 1;
+		count = parseInt(count.toString()) + parseInt(increment.toString());
+		logger.info(`newCount: ${count}`);
 		
 		// Update the current count in the action's settings, and change the title.
-		await ev.action.setSettings({ count });
+		await ev.action.setSettings({ count, increment });
 		await ev.action.setTitle(`${count}`);
 	}
 
 	async onDialDown(ev: DialDownEvent<CounterSettings>): Promise<void>{
 		let count = 0;
-		await ev.action.setSettings({ count });
+		let increment = ev.payload.settings.increment ?? 1;
+		await ev.action.setSettings({ count, increment });
 		return ev.action.setFeedback(
 			{
 			"title": "Dial pressed",
@@ -58,8 +62,9 @@ export class IncrementCounter extends SingletonAction<CounterSettings> {
 
 	async onDialRotate(ev: DialRotateEvent<CounterSettings>): Promise<void>{
 		let count = ev.payload.settings.count ?? 0;
-		count = count + ev.payload.ticks;
-		await ev.action.setSettings({ count });
+		let increment = ev.payload.settings.increment ?? 1;
+		count = count + (ev.payload.ticks*increment);
+		await ev.action.setSettings({ count, increment });
 		await ev.action.setFeedback(
 			{
 			"title":`Dial rotating ${ev.payload.ticks}`,
@@ -71,8 +76,10 @@ export class IncrementCounter extends SingletonAction<CounterSettings> {
 
 	async onTouchTap(ev: TouchTapEvent<CounterSettings>): Promise<void>
 	{
+		logger.info("onTouchTap");
 		let count = 100;
-		await ev.action.setSettings({ count });
+		let increment = ev.payload.settings.increment ?? 1;
+		await ev.action.setSettings({ count, increment });
 		await ev.action.setFeedback(
 			{
 			"title":`Touchscreen tapped`,
@@ -81,6 +88,19 @@ export class IncrementCounter extends SingletonAction<CounterSettings> {
 			}
 		  );
 	}
+	async onSendToPlugin(ev: SendToPluginEvent<JsonValue, CounterSettings>): Promise<void> {
+		let increment = ev.payload!["increment" as keyof object] ?? 1;
+		logger.info(`increment: ${increment} received from property inspector`)
+		const count = (await ev.action.getSettings()).count;
+		ev.action.setSettings({count, increment})
+	}
+
+	onDidReceiveSettings(ev: DidReceiveSettingsEvent<CounterSettings>): Promise<void> | void {
+		let increment: number  = ev.payload.settings.increment ?? 1;
+		let count : number = ev.payload.settings.count ?? 0;
+
+		ev.action.setSettings( { count, increment});
+	}
 }
 
 /**
@@ -88,4 +108,6 @@ export class IncrementCounter extends SingletonAction<CounterSettings> {
  */
 type CounterSettings = {
 	count: number;
+	increment : number;
 };
+
