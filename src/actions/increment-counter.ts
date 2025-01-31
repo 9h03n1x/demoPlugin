@@ -40,6 +40,9 @@ export class IncrementCounter extends SingletonAction<CounterSettings> {
 		let increment= ev.payload.settings.increment?? 1;
 		count = parseInt(count.toString()) + parseInt(increment.toString());
 		logger.info(`newCount: ${count}`);
+		logger.debug("debug message");
+		logger.warn("this is a warning");
+		logger.error("this is an error");
 		
 		// Update the current count in the action's settings, and change the title.
 		await ev.action.setSettings({ count, increment });
